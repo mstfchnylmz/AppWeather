@@ -1,5 +1,6 @@
 package com.mehmettemiz.appweather
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.pdf.models.ListItem
 import android.os.Build
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel : WeatherViewModel by viewModels<WeatherViewModel>()
     private lateinit var searchViewModel: SearchViewModel
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -95,8 +97,7 @@ class MainActivity : ComponentActivity() {
 
             AppWeatherTheme {
                 Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         BottomAppBar(
                             actions = {
@@ -106,10 +107,10 @@ class MainActivity : ComponentActivity() {
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     IconButton(onClick = { navController.navigate("LocationInfo") }) {
-                                        Icon(imageVector = Icons.Default.LocationOn, contentDescription = "example")
+                                        Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Location")
                                     }
                                     IconButton(onClick = { navController.navigate("Search") }) {
-                                        Icon(imageVector = Icons.Default.Search, contentDescription = "example")
+                                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                                     }
                                 }
                             },
@@ -117,8 +118,8 @@ class MainActivity : ComponentActivity() {
                             contentColor = Color.White
                         )
                     }
-                ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) { // Box'ı da tam boy yapıyoruz
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) { // Tam ekran kullanım
                         NavHost(navController = navController, startDestination = "SplashScreen") {
                             composable("SplashScreen") {
                                 SplashScreen(navController, weatherList)
@@ -133,18 +134,19 @@ class MainActivity : ComponentActivity() {
                                         customBackground = customBackground
                                     )
                                 } else {
-                                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                        CircularProgressIndicator()
+                                    }
                                 }
                             }
                             composable("Search") {
-                                // SearchScreen burada!
                                 SearchScreen(
                                     viewModel = searchViewModel,
                                     weatherList = searchWeatherList,
                                     forecastTodayList = searchForecastTodayList,
                                     forecastWeatherList = searchForecastWeatherList,
                                     customBackground = searchCustomBackground
-                                    )
+                                )
                             }
                         }
                     }
